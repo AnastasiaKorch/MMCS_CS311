@@ -230,7 +230,7 @@ namespace TestSimpleLexer
                 {Tok.ID, "ts"},
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "623"},
-                {Tok.COMMENT, "// 23 sa 3"},
+                {Tok.COMMENT, "// 23 sa 3"}
 
             }.ToList(), lexems);
         }
