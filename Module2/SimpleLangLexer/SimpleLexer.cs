@@ -26,40 +26,41 @@ namespace SimpleLexer
         BEGIN,
         END,
         CYCLE,
-        COMMA,
         PLUS,
         MINUS,
-        MULT,
-        DIVISION,
-        MOD,
+        MULTIPLY,
+        DIVIDE,
         DIV,
+        MOD,
         AND,
         OR,
         NOT,
-        MULTASSIGN,
-        DIVASSIGN,
+        COMMA,
         PLUSASSIGN,
         MINUSASSIGN,
-        LT,  //lesser
-        GT,  //greater
-        LEQ, //less or equal
-        GEQ, //greater or equal
-        EQ,  //equal
-        NEQ, //not equal
-        WHILE,
+        MULTIPLYASSIGN,
+        DIVIDEASSIGN,
+        MORE,
+        LESS,
+        EQUALLY,
+        NOTEQUALLY,
+        LESSEQ,
+        MOREEQ,
+        COMMENT,
+
         DO,
         FOR,
         TO,
         IF,
         THEN,
         ELSE,
+        WHILE,
         LEFT_BRACKET,
-        RIGHT_BRACKET,
+        RIGHT_BRACKET
     }
 
-     public class Lexer
+    public class Lexer
     {
-        private int position;
         private char currentCh;                      // Текущий символ
         public int LexRow, LexCol;                  // Строка-столбец начала лексемы. Конец лексемы = LexCol+LexText.Length
         private int row, col;                        // текущие строка и столбец в файле
@@ -70,7 +71,7 @@ namespace SimpleLexer
         public int LexValue;                        // Целое значение, связанное с лексемой LexNum
 
         private string CurrentLineText;  // Накапливает символы текущей строки для сообщений об ошибках
-        
+
 
         public Lexer(TextReader input)
         {
@@ -83,7 +84,8 @@ namespace SimpleLexer
             NextLexem();    // Считать первую лексему, заполнив LexText, LexKind и, возможно, LexValue
         }
 
-        public void Init() {
+        public void Init()
+        {
 
         }
 
@@ -100,6 +102,19 @@ namespace SimpleLexer
             keywordsMap["begin"] = Tok.BEGIN;
             keywordsMap["end"] = Tok.END;
             keywordsMap["cycle"] = Tok.CYCLE;
+            keywordsMap["and"] = Tok.AND;
+            keywordsMap["or"] = Tok.OR;
+            keywordsMap["not"] = Tok.NOT;
+            keywordsMap["div"] = Tok.DIV;
+            keywordsMap["mod"] = Tok.MOD;
+
+            keywordsMap["while"] = Tok.WHILE;
+            keywordsMap["do"] = Tok.DO;
+            keywordsMap["for"] = Tok.FOR;
+            keywordsMap["to"] = Tok.TO;
+            keywordsMap["if"] = Tok.IF;
+            keywordsMap["then"] = Tok.THEN;
+            keywordsMap["else"] = Tok.ELSE;
         }
 
         public string FinishCurrentLine()
@@ -158,26 +173,167 @@ namespace SimpleLexer
             LexCol = col;
             // Тип лексемы определяется по ее первому символу
             // Для каждой лексемы строится синтаксическая диаграмма
-            if (currentCh == ';')
+
+            //----------------------------------------
+            if (currentCh == '+')
+            {
+                NextCh();
+                if (currentCh != '=')
+                {
+                    if (LexText == "+")
+                    {
+                        LexKind = Tok.PLUS;
+                    }
+                    else
+                    {
+                        NextCh();
+                        LexKind = Tok.PLUS;
+                    }
+                }
+                else
+                {
+                    NextCh();
+                    LexKind = Tok.PLUSASSIGN;
+                }
+            }
+
+            //----------------------------------------
+            else if (currentCh == '-')
+            {
+                NextCh();
+                if (currentCh != '=')
+                {
+                    if (LexText == "-")
+                    {
+                        LexKind = Tok.MINUS;
+                    }
+                    else
+                    {
+                        NextCh();
+                        LexKind = Tok.MINUS;
+                    }
+                }
+                else
+                {
+                    NextCh();
+                    LexKind = Tok.MINUSASSIGN;
+                }
+            }
+
+            //----------------------------------------
+            else if (currentCh == '*')
+            {
+                NextCh();
+                if (currentCh != '=')
+                {
+                    if (LexText == "*")
+                    {
+                        LexKind = Tok.MULTIPLY;
+                    }
+                    else
+                    {
+                        NextCh();
+                        LexKind = Tok.MULTIPLY;
+                    }
+                }
+                else
+                {
+                    NextCh();
+                    LexKind = Tok.MULTIPLYASSIGN;
+                }
+            }
+
+            //----------------------------------------
+            else if (currentCh == '/')
+            {
+                NextCh();
+                if (currentCh == '/')
+                {
+                    while (currentCh != '\n' && currentCh != '\0')
+                        NextCh();
+                    LexKind = Tok.COMMENT;
+                }
+                else if (currentCh != '=')
+                {
+                    if (LexText == "/")
+                    {
+                        LexKind = Tok.DIVIDE;
+                    }
+                    else
+                    {
+                        NextCh();
+                        LexKind = Tok.DIVIDE;
+                    }
+                }
+                else
+                {
+                    NextCh();
+                    LexKind = Tok.DIVIDEASSIGN;
+                }
+            }
+
+            //----------------------------------------
+            else if (currentCh == '{')
+            {
+                NextCh();
+                while (currentCh != '}')
+                {
+                    if ((int)currentCh == 0)
+                        LexError("незакрытый до конца файла комментарий");
+                    NextCh();
+                }
+                NextCh();
+                LexKind = Tok.COMMENT;
+            }
+
+            //----------------------------------------
+            else if (currentCh == ';')
             {
                 NextCh();
                 LexKind = Tok.SEMICOLON;
             }
+
+            //----------------------------------------
+            else if (currentCh == ',')
+            {
+                NextCh();
+                LexKind = Tok.COMMA;
+            }
+
+            //----------------------------------------
             else if (currentCh == ':')
             {
                 NextCh();
                 if (currentCh != '=')
                 {
-                    LexError("= was expected");
+                    if (LexText == ":")
+                    {
+                        LexKind = Tok.COLON;
+                    }
+                    else
+                    {
+                        NextCh();
+                        LexKind = Tok.COLON;
+                    }
                 }
-                NextCh();
-                LexKind = Tok.ASSIGN;
+                else
+                {
+                    NextCh();
+                    LexKind = Tok.ASSIGN;
+                }
             }
+
+            //----------------------------------------
             else if (char.IsLetter(currentCh))
             {
                 while (char.IsLetterOrDigit(currentCh))
                 {
                     NextCh();
+                    if (keywordsMap.ContainsKey(LexText))
+                    {
+                        LexKind = keywordsMap[LexText];
+                        break;
+                    }
                 }
                 if (keywordsMap.ContainsKey(LexText))
                 {
@@ -188,6 +344,8 @@ namespace SimpleLexer
                     LexKind = Tok.ID;
                 }
             }
+
+            //----------------------------------------
             else if (char.IsDigit(currentCh))
             {
                 while (char.IsDigit(currentCh))
@@ -197,10 +355,70 @@ namespace SimpleLexer
                 LexValue = Int32.Parse(LexText);
                 LexKind = Tok.INUM;
             }
+
+            //----------------------------------------
             else if ((int)currentCh == 0)
             {
                 LexKind = Tok.EOF;
             }
+
+            //----------------------------------------
+            else if (currentCh == '<')
+            {
+                NextCh();
+                if (currentCh == '=')
+                {
+                    NextCh();
+                    LexKind = Tok.LESSEQ;
+                }
+                else if (currentCh == '>')
+                {
+                    NextCh();
+                    LexKind = Tok.NOTEQUALLY;
+                }
+                else
+                {
+                    //NextCh();
+                    LexKind = Tok.LESS;
+                }
+            }
+
+            //---------------------------------------
+            else if (currentCh == '>')
+            {
+                NextCh();
+                if (currentCh != '=')
+                {
+                    //NextCh();
+                    LexKind = Tok.MORE;
+                }
+                else
+                {
+                    NextCh();
+                    LexKind = Tok.MOREEQ;
+                }
+            }
+
+            //--------------------------------------
+            else if (currentCh == '=')
+            {
+                NextCh();
+                LexKind = Tok.EQUALLY;
+            }
+
+            //----------------------------------------
+            else if (currentCh == '(')
+            {
+                NextCh();
+                LexKind = Tok.LEFT_BRACKET;
+            }
+            else if (currentCh == ')')
+            {
+                NextCh();
+                LexKind = Tok.RIGHT_BRACKET;
+            }
+
+            //----------------------------------------
             else
             {
                 LexError("Incorrect symbol " + currentCh);
@@ -221,9 +439,11 @@ namespace SimpleLexer
             var result = t.ToString();
             switch (t)
             {
-                case Tok.ID: result += ' ' + LexText;
+                case Tok.ID:
+                    result += ' ' + LexText;
                     break;
-                case Tok.INUM: result += ' ' + LexValue.ToString();
+                case Tok.INUM:
+                    result += ' ' + LexValue.ToString();
                     break;
             }
             return result;
