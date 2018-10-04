@@ -28,8 +28,8 @@ namespace SimpleLexer
         CYCLE,
         PLUS,
         MINUS,
-        MULTIPLY,
-        DIVIDE,
+        MULT,
+        DIVISION,
         DIV,
         MOD,
         AND,
@@ -38,14 +38,14 @@ namespace SimpleLexer
         COMMA,
         PLUSASSIGN,
         MINUSASSIGN,
-        MULTIPLYASSIGN,
-        DIVIDEASSIGN,
-        MORE,
-        LESS,
-        EQUALLY,
-        NOTEQUALLY,
-        LESSEQ,
-        MOREEQ,
+        MULTASSIGN,
+        DIVASSIGN,
+        GT,
+        LT,
+        EQ,
+        NEQ,
+        LEQ,
+        GEQ,
         COMMENT,
 
         DO,
@@ -228,18 +228,18 @@ namespace SimpleLexer
                 {
                     if (LexText == "*")
                     {
-                        LexKind = Tok.MULTIPLY;
+                        LexKind = Tok.MULT;
                     }
                     else
                     {
                         NextCh();
-                        LexKind = Tok.MULTIPLY;
+                        LexKind = Tok.MULT;
                     }
                 }
                 else
                 {
                     NextCh();
-                    LexKind = Tok.MULTIPLYASSIGN;
+                    LexKind = Tok.MULTASSIGN;
                 }
             }
 
@@ -257,18 +257,18 @@ namespace SimpleLexer
                 {
                     if (LexText == "/")
                     {
-                        LexKind = Tok.DIVIDE;
+                        LexKind = Tok.DIVISION;
                     }
                     else
                     {
                         NextCh();
-                        LexKind = Tok.DIVIDE;
+                        LexKind = Tok.DIVISION;
                     }
                 }
                 else
                 {
                     NextCh();
-                    LexKind = Tok.DIVIDEASSIGN;
+                    LexKind = Tok.DIVASSIGN;
                 }
             }
 
@@ -369,17 +369,17 @@ namespace SimpleLexer
                 if (currentCh == '=')
                 {
                     NextCh();
-                    LexKind = Tok.LESSEQ;
+                    LexKind = Tok.LEQ;
                 }
                 else if (currentCh == '>')
                 {
                     NextCh();
-                    LexKind = Tok.NOTEQUALLY;
+                    LexKind = Tok.NEQ;
                 }
                 else
                 {
                     //NextCh();
-                    LexKind = Tok.LESS;
+                    LexKind = Tok.LT;
                 }
             }
 
@@ -390,12 +390,12 @@ namespace SimpleLexer
                 if (currentCh != '=')
                 {
                     //NextCh();
-                    LexKind = Tok.MORE;
+                    LexKind = Tok.GT;
                 }
                 else
                 {
                     NextCh();
-                    LexKind = Tok.MOREEQ;
+                    LexKind = Tok.GEQ;
                 }
             }
 
@@ -403,7 +403,7 @@ namespace SimpleLexer
             else if (currentCh == '=')
             {
                 NextCh();
-                LexKind = Tok.EQUALLY;
+                LexKind = Tok.EQ;
             }
 
             //----------------------------------------

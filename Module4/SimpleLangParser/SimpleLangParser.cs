@@ -226,7 +226,7 @@ namespace SimpleLangParser
         public void prod()
         {
             brackets();
-            while (l.LexKind == Tok.MULTIPLY || l.LexKind == Tok.DIVIDE)
+            while (l.LexKind == Tok.MULT || l.LexKind == Tok.DIVISION)
             {
                 l.NextLexem();
                 brackets();
