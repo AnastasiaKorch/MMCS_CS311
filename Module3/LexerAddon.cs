@@ -45,7 +45,8 @@ namespace  GeneratedLexer
             do {
                 tok = myScanner.yylex();
 
-                if (tok == (int)Tok.ID || tok == (int)Tok.ID2)
+                //if (tok == (int)Tok.ID || tok == (int)Tok.ID2)
+                if (tok == (int)Tok.ID)
                     idLength.Add(myScanner.yytext.Length);
 
                 if (tok == (int)Tok.INUM)
