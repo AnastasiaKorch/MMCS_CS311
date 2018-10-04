@@ -242,13 +242,14 @@ namespace TestSimpleLexer
             Lexer l = new Lexer(inputReader);
             
             var lexems = TestSimpleLexer.getLexerOutput(l);
-            Assert.IsTrue(lexems.Count == 3);
+            Assert.IsTrue(lexems.Count == 4);
             CollectionAssert.AreEqual(new LexemList()
             {
                 {Tok.ID, "ts"},
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "623"},
-   
+                {Tok.COMMENT, "// 23 sa 3"}
+
             }.ToList(), lexems);
         }
         

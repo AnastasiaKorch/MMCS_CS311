@@ -429,13 +429,17 @@ namespace SimpleLexer
         {
             do
             {
-                Console.WriteLine(TokToString(LexKind));
-                NextLexem();
+                if (LexKind != Tok.COMMENT)
+                {
+                    Console.WriteLine(TokToString(LexKind));
+                    NextLexem();
+                }
             } while (LexKind != Tok.EOF);
         }
 
         public string TokToString(Tok t)
         {
+
             var result = t.ToString();
             switch (t)
             {
