@@ -429,11 +429,9 @@ namespace SimpleLexer
         {
             do
             {
-                if (LexKind != Tok.COMMENT)
-                {
                     Console.WriteLine(TokToString(LexKind));
                     NextLexem();
-                }
+                
             } while (LexKind != Tok.EOF);
         }
 
