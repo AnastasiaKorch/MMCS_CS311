@@ -251,7 +251,7 @@ namespace SimpleLexer
                 {
                     while (currentCh != '\n' && currentCh != '\0')
                         NextCh();
-                    //LexKind = Tok.COMMENT;
+                    LexKind = Tok.COMMENT;
                 }
                 else if (currentCh != '=')
                 {
