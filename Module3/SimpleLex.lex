@@ -6,15 +6,49 @@ Digit   [0-9]
 AlphaDigit {Alpha}|{Digit}
 INTNUM  {Digit}+
 REALNUM {INTNUM}\.{INTNUM}
-ID {Alpha}{AlphaDigit}* 
+ID {Alpha}{AlphaDigit}*
+ID2 {Alpha}{AlphaDigit}*
+DotChr [^\r\n]
+OneLineCmnt  \/\/{DotChr}*
+Str \'[^']*\'
 
 // Здесь можно делать описания типов, переменных и методов - они попадают в класс Scanner
 %{
   public int LexValueInt;
   public double LexValueDouble;
+ 
 %}
 
+%x COMMENT
+
 %%
+
+"{" { 
+  BEGIN(COMMENT);
+  return (int)Tok.COMMENT_BEGIN;
+}
+ 
+<COMMENT>{ID2} {
+	if (yytext!= "begin" && yytext!= "end" && yytext!= "cycle")
+		{
+		return (int)Tok.ID2;
+		}
+}
+
+<COMMENT> "}" { 
+  BEGIN(INITIAL);
+  return (int)Tok.COMMENT_END;
+}
+
+
+{Str} {
+  return (int)Tok.STRING;
+}
+
+{OneLineCmnt} {
+  return (int)Tok.COMMENT;
+}
+
 {INTNUM} { 
   LexValueInt = int.Parse(yytext);
   return (int)Tok.INUM;
