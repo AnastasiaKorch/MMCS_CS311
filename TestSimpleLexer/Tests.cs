@@ -335,7 +335,7 @@ namespace TestSimpleLexer
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "623"},
                 {Tok.COMMENT, @"{ cmt
-cmt }"},
+                           cmt }"},
 
                 {Tok.ID, "id"},
                 {Tok.ASSIGN, ":="},

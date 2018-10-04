@@ -324,7 +324,7 @@ namespace SimpleLexer
             }
 
             //----------------------------------------
-            else if (char.IsLetter(currentCh))
+            /*else if (char.IsLetter(currentCh))
             {
                 while (char.IsLetterOrDigit(currentCh))
                 {
@@ -332,8 +332,24 @@ namespace SimpleLexer
                     if (keywordsMap.ContainsKey(LexText))
                     {
                         LexKind = keywordsMap[LexText];
+                        
                         break;
                     }
+                }
+                if (keywordsMap.ContainsKey(LexText))
+                {
+                    LexKind = keywordsMap[LexText];
+                }
+                else
+                {
+                    LexKind = Tok.ID;
+                }
+            }*/
+            else if (char.IsLetter(currentCh))
+            {
+                while (char.IsLetterOrDigit(currentCh))
+                {
+                    NextCh();
                 }
                 if (keywordsMap.ContainsKey(LexText))
                 {
