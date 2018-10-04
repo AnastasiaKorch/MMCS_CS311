@@ -48,6 +48,12 @@ namespace  GeneratedLexer
                 if (tok == (int)Tok.ID || tok == (int)Tok.ID2)
                     idLength.Add(myScanner.yytext.Length);
 
+                if (tok == (int)Tok.INUM)
+                    sumInt += myScanner.LexValueInt;
+
+                if (tok == (int)Tok.RNUM)
+                    sumDouble += myScanner.LexValueDouble;
+
                 if (tok == (int)Tok.EOF)
                 {
                     double totalLength = 0;
