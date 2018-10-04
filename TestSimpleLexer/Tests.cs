@@ -267,10 +267,11 @@ namespace TestSimpleLexer
                 {Tok.ID, "ts"},
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "623"},
+                {Tok.COMMENT, "// cmt"},
                 {Tok.ID, "id"},
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "22"},
-                {Tok.COMMENT, "// cmt"}
+                
 
             }.ToList(), lexems);
         }
@@ -333,7 +334,9 @@ namespace TestSimpleLexer
                 {Tok.ID, "ts"},
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "623"},
-                {Tok.COMMENT, "{ cmt\ncmt }"},
+                {Tok.COMMENT, @"{ cmt
+cmt }"},
+
                 {Tok.ID, "id"},
                 {Tok.ASSIGN, ":="},
                 {Tok.INUM, "22"},
