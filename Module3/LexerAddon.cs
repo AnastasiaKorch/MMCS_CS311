@@ -19,7 +19,8 @@ namespace  GeneratedLexer
         public int sumInt = 0;
         public double sumDouble = 0.0;
         public List<string> idsInComment = new List<string>();
-        
+        public List<int> idLength = new List<int>();
+
 
         public LexerAddon(string programText)
         {
@@ -44,8 +45,23 @@ namespace  GeneratedLexer
             do {
                 tok = myScanner.yylex();
 
+                if (tok == (int)Tok.ID || tok == (int)Tok.ID2)
+                    idLength.Add(myScanner.yytext.Length);
+
                 if (tok == (int)Tok.EOF)
                 {
+                    double totalLength = 0;
+                    idCount = idLength.Count;
+                    foreach (var item in idLength)
+                    {
+                        totalLength += item;
+                        if (item > maxIdLength)
+                            maxIdLength = item;
+                        if (item < minIdLength)
+                            minIdLength = item;
+                    }
+                    avgIdLength = totalLength / idCount;
+
                     break;
                 }
             } while (true);
